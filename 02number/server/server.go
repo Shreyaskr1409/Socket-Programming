@@ -25,7 +25,7 @@ func main() {
 		// ...and makes further code to execute till client initiates a connection
 		conn, err := listener.Accept()
 		if err != nil {
-			fmt.Println("Error excepting the connecting: ", err)
+			fmt.Println("Error excepting the connection: ", err)
 			continue
 		}
 		fmt.Println("Client connected!")
@@ -61,6 +61,7 @@ func handleConnection(conn net.Conn) {
 	_, err = conn.Write(buf.Bytes())
 	if err != nil {
 		fmt.Println("Error sending the data: ", err)
+		return
 	}
 	fmt.Println("Sent number to client")
 }

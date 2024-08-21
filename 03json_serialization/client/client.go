@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net"
 )
 
 type User struct {
@@ -43,6 +45,10 @@ func main() {
 	println("-----------------------------------")
 
 	Main_2()
+
+	println("-----------------------------------")
+
+	Main_3()
 }
 
 func Main_2() {
@@ -64,4 +70,40 @@ func Main_2() {
 	for _, user := range users {
 		fmt.Printf("Name: %s, Age: %v, IsStudent: %v\n", user["name"], user["age"], user["isStudent"])
 	}
+}
+
+func Main_3() {
+	conn, err := net.Dial("tcp", "localhost:8080")
+	// could have used :8080 but it would dial to any port with number 8080 on the machine
+	if err != nil {
+		println("Connection established")
+	}
+	defer conn.Close()
+
+	fmt.Println("Connection established")
+
+	buffer := make([]byte, 4096)
+	n, err := conn.Read(buffer)
+
+	if err != nil {
+		if err == io.EOF {
+			fmt.Println("Connection closed by the server")
+		} else {
+			fmt.Println("Error reading the data: ", err)
+		}
+		return
+	}
+
+	jsonData := buffer[:n]
+
+	fmt.Println("Recieved JSON data: ", string(jsonData))
+
+	var user User
+	err = json.Unmarshal(jsonData, &user)
+	if err != nil {
+		fmt.Println("Error while unmarshalling the json data: ", err)
+		return
+	}
+
+	fmt.Println("Recieved user: \n", user)
 }
