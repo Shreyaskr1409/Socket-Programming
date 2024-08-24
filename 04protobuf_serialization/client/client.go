@@ -23,11 +23,13 @@ func main() {
 	defer conn.Close()
 	fmt.Println("Connected to the server")
 
-	buf := make([]byte, 4096)
+	buf := make([]byte, 100)
+	//buf := make([]byte, 54)
 	n, err := conn.Read(buf)
 	if err != nil {
 		fmt.Println("Failed to read data from the connection: ", err)
 	}
+	fmt.Println(buf)
 
 	var user protobuf_data.User
 	protodata := buf[:n]
