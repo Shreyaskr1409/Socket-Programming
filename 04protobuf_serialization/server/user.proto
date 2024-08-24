@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package main;
+
+message User {
+    string name = 1;
+    int32 age = 2;
+    bool is_student = 3;
+    repeated string courses = 4;
+}
+
+// need to "protoc --go_out=. user.proto" to generate a go struct to be used
