@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"google.golang.org/protobuf/proto"
 	"net"
+	"server/protobuf_data"
 )
 
 // type User struct {
@@ -35,18 +37,25 @@ func main() {
 }
 
 func handleConnection(conn net.Conn) {
-	// user := &User{
-	// 	Name:      "Shreyas",
-	// 	Age:       18,
-	// 	IsStudent: true,
-	// 	Courses:   []string{"Analog Electronics", "Digital Electronics"},
-	// }
+	user := &protobuf_data.User{
+		Name:      "Shreyas",
+		Age:       18,
+		IsStudent: true,
+		Courses:   []string{"Analog Electronics", "Digital Electronics"},
+	}
 
-	// protoData, err := proto.Marshal(user)
-	// if err != nil {
-	// 	fmt.Println("Error converting data into protobuf")
-	// 	return
-	// }
+	protoData, err := proto.Marshal(user)
+	if err != nil {
+		fmt.Println("Error converting data into protobuf")
+		return
+	}
 
+	n, err := conn.Write(protoData)
+	if err != nil {
+		fmt.Println("Failed to send data: ", err)
+		return
+	}
+
+	fmt.Println(n, " bytes of Protobuf data sent!")
 	// will continue work on this after setting up protobuf
 }
